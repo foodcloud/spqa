@@ -1,0 +1,39 @@
+{
+  "name": "Embedded Broker",
+  "modelVersion": "7.0",
+  "authenticationproviders" : [ {
+    "id" : "798fc4a5-8edb-4b42-b1b2-8f7e9be8cccb",
+    "name" : "passwordFile",
+    "type" : "PlainPasswordFile",
+    "path" : "${qpid.home_dir}${file.separator}passwd",
+    "secureOnlyMechanisms": [],
+    "preferencesproviders" : [ {
+      "id" : "1dcee789-be1b-49cc-9032-3bc4b974d1d6",
+      "name" : "fileSystemPreferences",
+      "type" : "FileSystemPreferences",
+      "path" : "${qpid.work_dir}${file.separator}user.preferences.json"
+    }]
+  } ],
+  "ports" : [  {
+    "name" : "AMQP",
+    "port" : "${qpid.amqp_port}",
+    "protocols": [ "AMQP_0_9", "AMQP_0_9_1", "AMQP_1_0" ],
+    "authenticationProvider" : "passwordFile",
+    "virtualhostaliases" : [ {
+      "name" : "nameAlias",
+      "type" : "nameAlias"
+    }, {
+      "name" : "defaultAlias",
+      "type" : "defaultAlias"
+    }, {
+      "name" : "hostnameAlias",
+      "type" : "hostnameAlias"
+    } ]
+  }],
+  "virtualhostnodes" : [ {
+    "name" : "amqp",
+    "type" : "Memory",
+    "defaultVirtualHostNode" : "true",
+    "virtualHostInitialConfiguration" : "{\"type\": \"Memory\", \"nodeAutoCreationPolicies\": [{\"pattern\":\".*\",\"createdOnPublish\":\"true\",\"createdOnConsume\":\"true\",\"nodeType\":\"queue\",\"attributes\":{}}] }"
+  }]
+}
