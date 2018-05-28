@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/spqa.iml" filepath="$PROJECT_DIR$/.idea/modules/spqa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spqa-build.iml" filepath="$PROJECT_DIR$/.idea/modules/spqa-build.iml" />
     </modules>
   </component>
 </project>
