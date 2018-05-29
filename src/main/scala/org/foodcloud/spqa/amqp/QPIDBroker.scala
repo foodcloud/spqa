@@ -16,8 +16,7 @@ class QPIDBroker(virtualHost: String) {
   private val launcher = new SystemLauncher
 
   val configUrl = getClass.getClassLoader.getResource("qpid-broker.json")
-  val uri = new URI(configUrl.getPath)
-  val home = if (uri.getPath.endsWith("/")) uri.resolve("..") else uri.resolve(".")
+  val home = new URI(configUrl.getPath).resolve(".")
   System.setProperty("qpid.amqp_port", port.toString)
   System.setProperty("qpid.home_dir", home.toString)
   System.setProperty("vhost.name", virtualHost)
