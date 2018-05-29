@@ -1,36 +1,35 @@
 package org.foodcloud.spqa.amqp
 
-import java.nio.file.FileSystems
+import java.net.URI
 
 import org.apache.qpid.server.SystemLauncher
-import play.api.Logger
 
 import scala.collection.JavaConverters._
 
-class QPIDBroker {
-  val logger = Logger(this.getClass)
-  val configUrl = getClass.getClassLoader.getResource("qpid-broker.json")
-  logger.debug(s"source=${configUrl.toExternalForm}")
+class QPIDBroker(virtualHost: String) {
+  val credentials = "tester:secret"
 
   val socket = new java.net.ServerSocket(0)
   val port = socket.getLocalPort
   socket.close()
-  val endpoint = s"amqp://guest:guest@localhost:$port/amqp"
+  val endpoint = s"amqp://$credentials@localhost:$port/$virtualHost"
   private val launcher = new SystemLauncher
 
-  val home = FileSystems.getDefault.getPath("src/test/resources").toAbsolutePath
+  val configUrl = getClass.getClassLoader.getResource("qpid-broker.json")
+  val uri = new URI(configUrl.getPath)
+  val home = if (uri.getPath.endsWith("/")) uri.resolve("..") else uri.resolve(".")
   System.setProperty("qpid.amqp_port", port.toString)
   System.setProperty("qpid.home_dir", home.toString)
+  System.setProperty("vhost.name", virtualHost)
 
   val brokerOptions: Map[String,Object] = Map(
     "type" -> "Memory",
-    "initialConfigurationLocation" -> configUrl.toExternalForm)
+    "initialConfigurationLocation" -> configUrl.toExternalForm,
+    "initialSystemPropertiesLocation" -> s"file:$home/system.properties")
   launcher.startup(brokerOptions.asJava)
-  logger.debug(s"QPIDBroker ${launcher.getSystemPrincipal.getName} started on $endpoint")
 
   def stopBroker() = {
     launcher.shutdown()
-    logger.debug(s"QPIDBroker ${launcher.getSystemPrincipal.getName} stopped")
   }
 
 }

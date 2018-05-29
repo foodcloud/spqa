@@ -5,14 +5,14 @@
     "id" : "798fc4a5-8edb-4b42-b1b2-8f7e9be8cccb",
     "name" : "passwordFile",
     "type" : "PlainPasswordFile",
-    "path" : "${qpid.home_dir}${file.separator}passwd",
+    "path" : "${qpid.home_dir}passwd",
     "secureOnlyMechanisms": [],
     "preferencesproviders" : [ {
       "id" : "1dcee789-be1b-49cc-9032-3bc4b974d1d6",
       "name" : "fileSystemPreferences",
       "type" : "FileSystemPreferences",
-      "path" : "${qpid.work_dir}${file.separator}user.preferences.json"
-    }]
+      "path" : "${qpid.work_dir}user.preferences.json"
+    } ]
   } ],
   "ports" : [  {
     "name" : "AMQP",
@@ -31,7 +31,7 @@
     } ]
   }],
   "virtualhostnodes" : [ {
-    "name" : "amqp",
+    "name" : "${vhost.name}",
     "type" : "Memory",
     "defaultVirtualHostNode" : "true",
     "virtualHostInitialConfiguration" : "{\"type\": \"Memory\", \"nodeAutoCreationPolicies\": [{\"pattern\":\".*\",\"createdOnPublish\":\"true\",\"createdOnConsume\":\"true\",\"nodeType\":\"queue\",\"attributes\":{}}] }"

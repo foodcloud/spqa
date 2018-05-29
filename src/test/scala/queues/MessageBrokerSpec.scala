@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.alpakka.amqp.AmqpUriConnectionProvider
 import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
-import org.foodcloud.spqa.amqp.{AmqpListener, AmqpPublisher, QPIDBroker}
+import org.foodcloud.spqa.amqp.{AmqpPublisher, AmqpQueueListener, QPIDBroker}
 import org.scalatest._
 import Matchers._
 import org.scalatest.concurrent.PatienceConfiguration.Timeout
@@ -14,14 +14,14 @@ import play.api.inject.DefaultApplicationLifecycle
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 class MessageBrokerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterAll {
   implicit val system = ActorSystem("TestActorSystem")
   implicit val materializer = ActorMaterializer()
   implicit val ec = system.dispatcher
 
-  val brokerManager = new QPIDBroker
+  val brokerManager = new QPIDBroker(virtualHost="test")
   val amqpEndpoint = ConfigValueFactory.fromAnyRef(brokerManager.endpoint)
   val config = ConfigFactory.load("test-application.conf")
     .withValue("amqp.uri", amqpEndpoint)
@@ -38,12 +38,13 @@ class MessageBrokerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterAl
       message should equal("body=payload")
       mType shouldBe Some("test.message.type")
       waiter.dismiss()
-      Success("ok")
+      //Success("ok")
+      Failure(new RuntimeException())
     }
     val testQueue = "test-queue"
     val amqpConfig = AmqpUriConnectionProvider(config.getString("amqp.uri"))
     val publisher = new AmqpPublisher(amqpConfig)
-    val listener = new AmqpListener(amqpConfig, testQueue, lifecycle, handler)
+    val listener = new AmqpQueueListener(amqpConfig, testQueue, lifecycle, handler)
     listener.listen()
 
     whenReady(publisher.publish(testQueue, (testMessage, Some("test.message.type"))), Timeout(3 seconds)) { _ =>

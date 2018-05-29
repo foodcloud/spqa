@@ -13,8 +13,8 @@ import play.api.inject.ApplicationLifecycle
 import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
-class AmqpListener(amqpUri: AmqpUriConnectionProvider, queueName: String, lifecycle: ApplicationLifecycle,
-                   onMessage: (String,Option[String]) => Try[String])(implicit val system: ActorSystem) {
+class AmqpQueueListener(amqpUri: AmqpUriConnectionProvider, queueName: String, lifecycle: ApplicationLifecycle,
+                        onMessage: (String,Option[String]) => Try[String])(implicit val system: ActorSystem) {
   val logger = Logger(this.getClass)
   implicit val ec = system.dispatcher
   val decider: Decider = { ex =>
