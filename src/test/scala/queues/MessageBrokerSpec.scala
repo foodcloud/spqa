@@ -3,7 +3,6 @@ package queues
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.alpakka.amqp.AmqpUriConnectionProvider
-import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 import org.foodcloud.spqa.amqp.{AmqpPublisher, AmqpQueueListener, QPIDBroker}
 import org.scalatest.Matchers._
 import org.scalatest._
@@ -22,9 +21,6 @@ class MessageBrokerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterAl
   implicit val ec = system.dispatcher
 
   val brokerManager = new QPIDBroker(virtualHost="test")
-  val amqpEndpoint = ConfigValueFactory.fromAnyRef(brokerManager.endpoint)
-  val config = ConfigFactory.load("test-application.conf")
-    .withValue("amqp.uri", amqpEndpoint)
 
   val lifecycle = new DefaultApplicationLifecycle()
 
@@ -41,7 +37,7 @@ class MessageBrokerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterAl
       Success("ok")
     }
     val testQueue = "test-queue"
-    val amqpConfig = AmqpUriConnectionProvider(config.getString("amqp.uri"))
+    val amqpConfig = AmqpUriConnectionProvider(brokerManager.endpoint)
     val publisher = new AmqpPublisher(amqpConfig)
     val listener = new AmqpQueueListener(amqpConfig, testQueue, lifecycle, handler)
     listener.listen()
