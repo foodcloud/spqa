@@ -49,8 +49,8 @@ class MessageBrokerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterAl
     Await.ready(lifecycle.stop, Duration.Inf)
   }
 
-  override def afterAll = brokerManager.stopBroker()
-
-
+  override def afterAll = system.terminate() foreach { _ =>
+    brokerManager.stopBroker()
+  }
 
 }

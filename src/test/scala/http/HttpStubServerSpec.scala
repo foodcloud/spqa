@@ -58,4 +58,6 @@ class HttpStubServerSpec extends FlatSpec with ScalaFutures with BeforeAndAfterA
     Await.ready(server.shutdown(), Duration.Inf)
   }
 
+  override def afterAll = system.terminate()
+
 }
