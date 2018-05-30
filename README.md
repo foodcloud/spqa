@@ -74,4 +74,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[Dependancy Licenses](https://github.com/foodcloud/spqa/blob/master/metro-spqa-licenses.html)
+[Dependancy Licenses](https://github.com/foodcloud/spqa/blob/master/metro-spqa-licenses.md)
