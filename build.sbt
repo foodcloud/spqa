@@ -12,7 +12,7 @@ publishTo := Some("releases" at "https://mymavenrepo.com/repo/ou8dJuHGO5zQVKWnbV
 
 libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-api" % "1.7.25",
-  "org.apache.qpid" % "qpid-broker" % "7.0.3",
+  "org.apache.qpid" % "qpid-broker" % "7.0.3" exclude("com.sleepycat","je"),
   "com.typesafe.play" %% "play" % playVersion,
   "com.typesafe.play" %% "play-cache" % playVersion,
   "com.typesafe.akka" %% "akka-http" % "10.1.1",
